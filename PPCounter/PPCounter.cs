@@ -35,7 +35,7 @@ namespace PPCounter
             updatedModifiers = PluginSettings.Instance.ignoreNoFail ?
                                 BeatSaberUtils.RemoveNoFail(updatedModifiers) : updatedModifiers;
 
-            _multiplier = gameplayModifiersModelSO.GetTotalMultiplier(updatedModifiers);
+            _multiplier = BeatSaberUtils.CalculateMultiplier(gameplayModifiersModelSO, updatedModifiers);
 
             counter = CanvasUtility.CreateTextFromSettings(Settings);
             counter.fontSize = 3;
