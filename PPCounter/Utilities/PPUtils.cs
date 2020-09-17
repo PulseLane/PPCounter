@@ -64,6 +64,11 @@ namespace PPCounter.Utilities
             return songsAllowingPositiveModifiers.Contains(songID.id);
         }
 
+        public bool DataInitialized()
+        {
+            return ppData.Init;
+        }
+
         public float CalculatePP(SongID songID, float accuracy)
         {
             var rawPP = ppData.GetPP(songID);
@@ -107,6 +112,6 @@ namespace PPCounter.Utilities
             return m * (x3 - x1) + y1;
         }
 
-        public void Dispose() { Logger.log.Debug("Disposing pp utils"); }
+        public void Dispose() { }
     }
 }

@@ -25,8 +25,8 @@ namespace PPCounter
             var id = SongDataUtils.GetHash(difficultyBeatmap.level.levelID);
             songID = new SongID(id, difficultyBeatmap.difficulty);
 
-            // Don't show anything for unranked songs
-            if (!ppUtils.IsRanked(songID))
+            // Don't show anything for unranked songs or if data not initialized
+            if (!ppUtils.IsRanked(songID) || !ppUtils.DataInitialized())
                 return;
 
             var gameplayModifiersModelSO = IPA.Utilities.FieldAccessor<RelativeScoreAndImmediateRankCounter, GameplayModifiersModelSO>.Get(relativeScoreAndImmediateRank, "_gameplayModifiersModel");
