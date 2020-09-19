@@ -3,7 +3,7 @@
   "id": "PPCounter",
   "name": "PPCounter",
   "author": "PulseLane",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Adds a counter showing how much pp your current accuracy is worht on a ranked map",
   "gameVersion": "1.11.1",
   "dependsOn": {

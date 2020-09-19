@@ -64,7 +64,7 @@ namespace PPCounter.Data
 
         public bool IsRanked(Structs.SongID songID)
         {
-            return _songData.ContainsKey(songID.id);
+            return _songData.ContainsKey(songID.id) && GetPP(songID) > 0;
         }
 
         public void Dispose()
