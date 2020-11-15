@@ -17,18 +17,42 @@ namespace PPCounter.Utilities
 
         public static GameplayModifiers RemovePositiveModifiers(GameplayModifiers modifiers)
         {
-            GameplayModifiers newModifiers = new GameplayModifiers(modifiers);
-            newModifiers.disappearingArrows = false;
-            newModifiers.ghostNotes = false;
-            newModifiers.songSpeed = newModifiers.songSpeed.Equals(GameplayModifiers.SongSpeed.Faster) ? GameplayModifiers.SongSpeed.Normal : newModifiers.songSpeed;
-            return newModifiers;
+            return new GameplayModifiers(
+                modifiers.demoNoFail,
+                modifiers.demoNoObstacles,
+                modifiers.energyType,
+                modifiers.noFail,
+                modifiers.instaFail,
+                modifiers.failOnSaberClash,
+                modifiers.enabledObstacleType,
+                modifiers.noBombs,
+                modifiers.fastNotes,
+                modifiers.strictAngles,
+                false, // DA
+                modifiers.songSpeed.Equals(GameplayModifiers.SongSpeed.Faster) ? GameplayModifiers.SongSpeed.Normal : modifiers.songSpeed,
+                modifiers.noArrows,
+                false // GN
+           );
         }
 
         public static GameplayModifiers RemoveNoFail(GameplayModifiers modifiers)
         {
-            GameplayModifiers newModifiers = new GameplayModifiers(modifiers);
-            newModifiers.noFail = false;
-            return newModifiers;
+           return new GameplayModifiers(
+                modifiers.demoNoFail,
+                modifiers.demoNoObstacles,
+                modifiers.energyType,
+                false,
+                modifiers.instaFail,
+                modifiers.failOnSaberClash,
+                modifiers.enabledObstacleType,
+                modifiers.noBombs,
+                modifiers.fastNotes,
+                modifiers.strictAngles,
+                modifiers.disappearingArrows,
+                modifiers.songSpeed,
+                modifiers.noArrows,
+                modifiers.ghostNotes
+            );
         }
 
         public static float CalculateMultiplier(GameplayModifiersModelSO gameplayModifiersModelSO, GameplayModifiers modifiers)
