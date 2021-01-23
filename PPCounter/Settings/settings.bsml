@@ -1,4 +1,3 @@
 ﻿<vertical spacing="1" horizontal--fit="PreferredSize">
-  <checkbox-setting text="Ignore No Fail" value="ignoreNoFail" hover-hint="Ignore the 'No Fail' modifier when calculating pp" apply-on-change="true"></checkbox-setting>
   <increment-setting text="Decimal Precision" value="decimalPrecision" integer-only="true" min="0" max="2" increment="1" apply-on-change="true"></increment-setting>
 </vertical>

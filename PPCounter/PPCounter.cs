@@ -32,10 +32,6 @@ namespace PPCounter
             var gameplayModifiersModelSO = IPA.Utilities.FieldAccessor<RelativeScoreAndImmediateRankCounter, GameplayModifiersModelSO>.Get(relativeScoreAndImmediateRank, "_gameplayModifiersModel");
             GameplayModifiers updatedModifiers = ppUtils.AllowedPositiveModifiers(songID) ? 
                                                     gameplayModifiers : BeatSaberUtils.RemovePositiveModifiers(gameplayModifiers);
-            updatedModifiers = PluginSettings.Instance.ignoreNoFail ?
-                                BeatSaberUtils.RemoveNoFail(updatedModifiers) : updatedModifiers;
-
-            _multiplier = BeatSaberUtils.CalculateMultiplier(gameplayModifiersModelSO, updatedModifiers);
 
             counter = CanvasUtility.CreateTextFromSettings(Settings);
             counter.fontSize = 3;
@@ -46,7 +42,7 @@ namespace PPCounter
 
         private void ScoreUpdated()
         {
-            var acc = relativeScoreAndImmediateRank.relativeScore * _multiplier;
+            var acc = relativeScoreAndImmediateRank.relativeScore;
             UpdateCounterText(ppUtils.CalculatePP(songID, acc));
         }
 
