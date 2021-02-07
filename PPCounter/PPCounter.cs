@@ -1,4 +1,5 @@
 ﻿using CountersPlus.Counters.Custom;
+using CountersPlus.Counters.NoteCountProcessors;
 using PPCounter.Settings;
 using PPCounter.Utilities;
 using System.Globalization;
@@ -13,12 +14,15 @@ namespace PPCounter
         [Inject] private RelativeScoreAndImmediateRankCounter relativeScoreAndImmediateRank;
         [Inject] private IDifficultyBeatmap difficultyBeatmap;
         [Inject] private GameplayModifiers gameplayModifiers;
+        [Inject] private PlayerDataModel playerDataModel;
         [Inject] private PPUtils ppUtils;
+
+        [Inject] private NoteCountProcessor noteCountProcessor; // yoink from C+
 
         private SongID songID;
         private TMP_Text counter;
 
-        private float _multiplier;
+        private float _pbPP;
 
         public override void CounterInit()
         {
@@ -38,6 +42,20 @@ namespace PPCounter
             UpdateCounterText(ppUtils.CalculatePP(songID, 1f));
 
             relativeScoreAndImmediateRank.relativeScoreOrImmediateRankDidChangeEvent += ScoreUpdated;
+
+            if (PluginSettings.Instance.relativeGain)
+            {
+                var highScore = playerDataModel.playerData.GetPlayerLevelStatsData(difficultyBeatmap).highScore;
+                if (highScore == 0)
+                {
+                    _pbPP = 0;
+                    return;
+                }
+
+                var maxScore = ScoreModel.MaxRawScoreForNumberOfNotes(noteCountProcessor.NoteCount);
+                var acc = (float)highScore / maxScore;
+                _pbPP = ppUtils.CalculatePP(songID, acc);
+            }
         }
 
         private void ScoreUpdated()
@@ -50,6 +68,24 @@ namespace PPCounter
         {
             var ppString = pp.ToString($"F{PluginSettings.Instance.decimalPrecision}", CultureInfo.InvariantCulture);
             counter.text = $"{ppString}pp";
+            if (PluginSettings.Instance.relativeGain && _pbPP > 0)
+            {
+                var ppDiff = pp - _pbPP;
+                var colorTextStart = "";
+                var colorTextEnd = "";
+
+                if (PluginSettings.Instance.relativeGainColor)
+                {
+                    var color = ppDiff >= 0 ? "green" : "red";
+                    colorTextStart = $"<color=\"{color}\">";
+                    colorTextEnd = "</color>";
+                }
+
+                var gainText = ppDiff >= 0 ? "+" : "";
+                var ppDiffText = ppDiff.ToString($"F{PluginSettings.Instance.decimalPrecision}", CultureInfo.InvariantCulture);
+                counter.text += PluginSettings.Instance.relativeGainInline ? $" ({colorTextStart}{gainText}{ppDiffText}{colorTextEnd})"
+                                : $"\n{colorTextStart}{gainText}{ppDiffText}{colorTextEnd}";
+            }
         }
         public override void CounterDestroy()
         {
