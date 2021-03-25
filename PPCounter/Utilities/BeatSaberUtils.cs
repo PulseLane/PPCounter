@@ -22,9 +22,13 @@ namespace PPCounter.Utilities
                 modifiers.fastNotes,
                 modifiers.strictAngles,
                 false, // DA
-                modifiers.songSpeed.Equals(GameplayModifiers.SongSpeed.Faster) ? GameplayModifiers.SongSpeed.Normal : modifiers.songSpeed,
+                (modifiers.songSpeed.Equals(GameplayModifiers.SongSpeed.Faster) || modifiers.songSpeed.Equals(GameplayModifiers.SongSpeed.SuperFast))
+                ? GameplayModifiers.SongSpeed.Normal : modifiers.songSpeed,
                 modifiers.noArrows,
-                false // GN
+                false, // GN
+                modifiers.proMode,
+                modifiers.zenMode,
+                modifiers.smallCubes
            );
         }
     }
