@@ -37,7 +37,17 @@ namespace PPCounter.Data
                 }
                 else
                 {
-                    OnDataDownloaded?.Invoke(JsonConvert.DeserializeObject<Dictionary<string, RawPPData>>(webRequest.downloadHandler.text));
+                    try
+                    {
+                        var json = JsonConvert.DeserializeObject<Dictionary<string, RawPPData>>(webRequest.downloadHandler.text);
+                        OnDataDownloaded?.Invoke(json);
+                    }
+
+                    catch (Exception e)
+                    {
+                        OnError?.Invoke();
+                        Logger.log.Error($"Error processing json");
+                    }
                 }
             }
         }

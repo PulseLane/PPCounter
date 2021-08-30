@@ -30,8 +30,10 @@ namespace PPCounter
             songID = new SongID(id, difficultyBeatmap.difficulty);
 
             // Don't show anything for unranked songs or if data not initialized
-            if (!ppUtils.IsRanked(songID) || !ppUtils.DataInitialized())
+            if (!ppUtils.DataInitialized() || !ppUtils.IsRanked(songID))
+            {
                 return;
+            }
 
             var gameplayModifiersModelSO = IPA.Utilities.FieldAccessor<RelativeScoreAndImmediateRankCounter, GameplayModifiersModelSO>.Get(relativeScoreAndImmediateRank, "_gameplayModifiersModel");
             GameplayModifiers updatedModifiers = ppUtils.AllowedPositiveModifiers(songID) ? 
