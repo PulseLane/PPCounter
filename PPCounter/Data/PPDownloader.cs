@@ -46,7 +46,7 @@ namespace PPCounter.Data
                     catch (Exception e)
                     {
                         OnError?.Invoke();
-                        Logger.log.Error($"Error processing json");
+                        Logger.log.Error($"Error processing json: {e.Message}");
                     }
                 }
             }
