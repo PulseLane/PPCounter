@@ -8,6 +8,7 @@ namespace PPCounter.Settings
     {
         public static PluginSettings Instance { get; set; }
         public virtual int decimalPrecision { get; set; } = 2;
+        public virtual bool newCurve { get; set; } = false;
         public virtual bool relativeGain { get; set; } = false;
         public virtual bool relativeGainInline { get; set; } = false;
         public virtual bool relativeGainColor { get; set; } = false;

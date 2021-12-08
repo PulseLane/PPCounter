@@ -36,12 +36,12 @@ namespace PPCounter
             }
 
             var gameplayModifiersModelSO = IPA.Utilities.FieldAccessor<RelativeScoreAndImmediateRankCounter, GameplayModifiersModelSO>.Get(relativeScoreAndImmediateRank, "_gameplayModifiersModel");
-            GameplayModifiers updatedModifiers = ppUtils.AllowedPositiveModifiers(songID) ? 
+            GameplayModifiers updatedModifiers = ppUtils.AllowedPositiveModifiers(songID) ?
                                                     gameplayModifiers : BeatSaberUtils.RemovePositiveModifiers(gameplayModifiers);
 
             counter = CanvasUtility.CreateTextFromSettings(Settings);
             counter.fontSize = 3;
-            UpdateCounterText(ppUtils.CalculatePP(songID, 1f));
+            UpdateCounterText(ppUtils.CalculatePP(songID, 1f, PluginSettings.Instance.newCurve));
 
             relativeScoreAndImmediateRank.relativeScoreOrImmediateRankDidChangeEvent += ScoreUpdated;
 
@@ -56,14 +56,14 @@ namespace PPCounter
 
                 var maxScore = ScoreModel.MaxRawScoreForNumberOfNotes(noteCountProcessor.NoteCount);
                 var acc = (float)highScore / maxScore;
-                _pbPP = ppUtils.CalculatePP(songID, acc);
+                _pbPP = ppUtils.CalculatePP(songID, acc, PluginSettings.Instance.newCurve);
             }
         }
 
         private void ScoreUpdated()
         {
             var acc = relativeScoreAndImmediateRank.relativeScore;
-            UpdateCounterText(ppUtils.CalculatePP(songID, acc));
+            UpdateCounterText(ppUtils.CalculatePP(songID, acc, PluginSettings.Instance.newCurve));
         }
 
         private void UpdateCounterText(float pp)

@@ -1,4 +1,5 @@
 ﻿<vertical spacing="1" horizontal-fit="PreferredSize">
+  <checkbox-setting text="New Curve" value="newCurve" hover-hint="Show the pp value for the new experimental scoresaber pp curve" apply-on-change="true"/>
   <increment-setting text="Decimal Precision" value="decimalPrecision" integer-only="true" min="0" max="2" increment="1" apply-on-change="true"></increment-setting>
   <checkbox-setting text="Relative Gain" value="relativeGain" hover-hint="Show how much pp gain/loss your current score would be relative to your PB" apply-on-change="true"></checkbox-setting>
   <checkbox-setting text="Relative Gain Inline" value="relativeGainInline" hover-hint="Show the relative gain on the same line as the pp. If disabled, will show on a new line instead." apply-on-change="true"></checkbox-setting>
