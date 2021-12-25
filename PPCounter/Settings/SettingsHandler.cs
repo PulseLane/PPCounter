@@ -14,16 +14,6 @@ namespace PPCounter.Settings
             }
         }
 
-        [UIValue("newCurve")]
-        public bool newCurve
-        {
-            get => PluginSettings.Instance.newCurve;
-            set
-            {
-                PluginSettings.Instance.newCurve = value;
-            }
-        }
-
         [UIValue("relativeGain")]
         public bool relativeGain
         {

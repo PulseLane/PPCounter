@@ -10,7 +10,7 @@ namespace PPCounter.Utilities
     {
         [Inject] private PPData ppData;
 
-        private static (float, float)[] ppCurve = new (float, float)[]
+        private static (float, float)[] oldPPCurve = new (float, float)[]
         {
             (0f, 0),
             (.45f, .015f),
@@ -59,23 +59,23 @@ namespace PPCounter.Utilities
         };
 
         // Pre-compute to save on division operator
-        private float[] slopes;
+        private float[] oldSlopes;
 
         private float[] newSlopes;
 
         public void Initialize()
         {
             Logger.log.Debug("Initializing PPUtils");
-            slopes = new float[ppCurve.Length - 1];
-            for (var i = 0; i < ppCurve.Length - 1; i++)
+            oldSlopes = new float[oldPPCurve.Length - 1];
+            for (var i = 0; i < oldPPCurve.Length - 1; i++)
             {
-                var x1 = ppCurve[i].Item1;
-                var y1 = ppCurve[i].Item2;
-                var x2 = ppCurve[i + 1].Item1;
-                var y2 = ppCurve[i + 1].Item2;
+                var x1 = oldPPCurve[i].Item1;
+                var y1 = oldPPCurve[i].Item2;
+                var x2 = oldPPCurve[i + 1].Item1;
+                var y2 = oldPPCurve[i + 1].Item2;
 
                 var m = (y2 - y1) / (x2 - x1);
-                slopes[i] = m;
+                oldSlopes[i] = m;
             }
 
             newSlopes = new float[newPPCurve.Length - 1];
@@ -106,21 +106,21 @@ namespace PPCounter.Utilities
             return ppData.Init;
         }
 
-        public float CalculatePP(SongID songID, float accuracy, bool newCurve)
+        public float CalculatePP(SongID songID, float accuracy, bool oldCurve)
         {
             var rawPP = ppData.GetPP(songID);
-            return CalculatePP(rawPP, accuracy, newCurve);
+            return CalculatePP(rawPP, accuracy, oldCurve);
         }
 
-        public float CalculatePP(float rawPP, float accuracy, bool newCurve)
+        public float CalculatePP(float rawPP, float accuracy, bool oldCurve)
         {
-            return rawPP * PPPercentage(accuracy, newCurve);
+            return rawPP * PPPercentage(accuracy, oldCurve);
         }
 
-        private float PPPercentage(float accuracy, bool newCurve)
+        private float PPPercentage(float accuracy, bool oldCurve)
         {
-            var max = newCurve ? 1f : 1.14f;
-            var maxReward = newCurve ? 1.5f : 1.25f;
+            var max = oldCurve ? 1.14f : 1f;
+            var maxReward = oldCurve ? 1.25f : 1.5f;
 
             if (accuracy >= max)
                 return maxReward;
@@ -130,7 +130,7 @@ namespace PPCounter.Utilities
 
             var i = -1;
 
-            if (newCurve)
+            if (!oldCurve)
             {
                 foreach ((float score, float given) in newPPCurve)
                 {
@@ -141,7 +141,7 @@ namespace PPCounter.Utilities
             }
             else
             {
-                foreach ((float score, float given) in ppCurve)
+                foreach ((float score, float given) in oldPPCurve)
                 {
                     if (score > accuracy)
                         break;
@@ -149,35 +149,35 @@ namespace PPCounter.Utilities
                 }
             }
 
-            if (newCurve)
+            if (!oldCurve)
             {
                 var lowerScore = newPPCurve[i].Item1;
                 var higherScore = newPPCurve[i + 1].Item1;
                 var lowerGiven = newPPCurve[i].Item2;
                 var higherGiven = newPPCurve[i + 1].Item2;
-                return Lerp(lowerScore, lowerGiven, higherScore, higherGiven, accuracy, i, newCurve);
+                return Lerp(lowerScore, lowerGiven, higherScore, higherGiven, accuracy, i, oldCurve);
             }
             else
             {
-                var lowerScore = ppCurve[i].Item1;
-                var higherScore = ppCurve[i + 1].Item1;
-                var lowerGiven = ppCurve[i].Item2;
-                var higherGiven = ppCurve[i + 1].Item2;
-                return Lerp(lowerScore, lowerGiven, higherScore, higherGiven, accuracy, i, newCurve);
+                var lowerScore = oldPPCurve[i].Item1;
+                var higherScore = oldPPCurve[i + 1].Item1;
+                var lowerGiven = oldPPCurve[i].Item2;
+                var higherGiven = oldPPCurve[i + 1].Item2;
+                return Lerp(lowerScore, lowerGiven, higherScore, higherGiven, accuracy, i, oldCurve);
             }
 
         }
 
-        private float Lerp(float x1, float y1, float x2, float y2, float x3, int i, bool newCurve)
+        private float Lerp(float x1, float y1, float x2, float y2, float x3, int i, bool oldCurve)
         {
             float m;
-            if (newCurve && newSlopes != null)
+            if (!oldCurve && newSlopes != null)
             {
                 m = newSlopes[i];
             }
-            else if (!newCurve && slopes != null)
+            else if (!oldCurve && oldSlopes != null)
             {
-                m = slopes[i];
+                m = oldSlopes[i];
             }
             else
             {

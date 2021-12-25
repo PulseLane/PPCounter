@@ -18,8 +18,8 @@ namespace PPCounter
             instance = this;
             Logger.log = logger;
             Logger.log.Debug("Logger initialized.");
-            zenject.OnApp<Installers.DataInstaller>();
-            zenject.OnApp<Installers.UtilsInstaller>();
+            zenject.Install<Installers.DataInstaller>(Location.App);
+            zenject.Install<Installers.UtilsInstaller>(Location.App);
             Settings.PluginSettings.Instance = config.Generated<Settings.PluginSettings>();
         }
     }

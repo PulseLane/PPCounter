@@ -1,4 +1,5 @@
 ﻿using CountersPlus.Counters.Custom;
+using CountersPlus.Counters.Interfaces;
 using CountersPlus.Counters.NoteCountProcessors;
 using PPCounter.Settings;
 using PPCounter.Utilities;
@@ -23,6 +24,7 @@ namespace PPCounter
         private TMP_Text counter;
 
         private float _pbPP;
+        private float _multiplier = 1f;
 
         public override void CounterInit()
         {
@@ -37,13 +39,15 @@ namespace PPCounter
 
             var gameplayModifiersModelSO = IPA.Utilities.FieldAccessor<RelativeScoreAndImmediateRankCounter, GameplayModifiersModelSO>.Get(relativeScoreAndImmediateRank, "_gameplayModifiersModel");
             GameplayModifiers updatedModifiers = ppUtils.AllowedPositiveModifiers(songID) ?
-                                                    gameplayModifiers : BeatSaberUtils.RemovePositiveModifiers(gameplayModifiers);
+                                                    gameplayModifiers : GameplayModifierUtils.RemovePositiveModifiers(gameplayModifiers);
+
+            _multiplier = GameplayModifierUtils.CalculateMultiplier(gameplayModifiersModelSO, updatedModifiers);
 
             counter = CanvasUtility.CreateTextFromSettings(Settings);
             counter.fontSize = 3;
-            UpdateCounterText(ppUtils.CalculatePP(songID, 1f, PluginSettings.Instance.newCurve));
 
             relativeScoreAndImmediateRank.relativeScoreOrImmediateRankDidChangeEvent += ScoreUpdated;
+            UpdateCounterText(ppUtils.CalculatePP(songID, _multiplier, ppUtils.AllowedPositiveModifiers(songID)));
 
             if (PluginSettings.Instance.relativeGain)
             {
@@ -56,14 +60,14 @@ namespace PPCounter
 
                 var maxScore = ScoreModel.MaxRawScoreForNumberOfNotes(noteCountProcessor.NoteCount);
                 var acc = (float)highScore / maxScore;
-                _pbPP = ppUtils.CalculatePP(songID, acc, PluginSettings.Instance.newCurve);
+                _pbPP = ppUtils.CalculatePP(songID, acc, ppUtils.AllowedPositiveModifiers(songID));
             }
         }
 
         private void ScoreUpdated()
         {
-            var acc = relativeScoreAndImmediateRank.relativeScore;
-            UpdateCounterText(ppUtils.CalculatePP(songID, acc, PluginSettings.Instance.newCurve));
+            var acc = relativeScoreAndImmediateRank.relativeScore * _multiplier;
+            UpdateCounterText(ppUtils.CalculatePP(songID, acc, ppUtils.AllowedPositiveModifiers(songID)));
         }
 
         private void UpdateCounterText(float pp)
