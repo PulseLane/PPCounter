@@ -18,7 +18,7 @@ namespace PPCounter
         [Inject] private PlayerDataModel playerDataModel;
         [Inject] private PPUtils ppUtils;
 
-        [Inject] private NoteCountProcessor noteCountProcessor; // yoink from C+
+        [Inject] private IReadonlyBeatmapData beatmapData;
 
         private SongID songID;
         private TMP_Text counter;
@@ -58,7 +58,7 @@ namespace PPCounter
                     return;
                 }
 
-                var maxScore = ScoreModel.MaxRawScoreForNumberOfNotes(noteCountProcessor.NoteCount);
+                var maxScore = ScoreModel.ComputeMaxMultipliedScoreForBeatmap(beatmapData);
                 var acc = (float)highScore / maxScore;
                 _pbPP = ppUtils.CalculatePP(songID, acc, ppUtils.AllowedPositiveModifiers(songID));
             }

@@ -15,8 +15,6 @@ namespace PPCounter.Utilities
         public static GameplayModifiers RemovePositiveModifiers(GameplayModifiers modifiers)
         {
             return new GameplayModifiers(
-                modifiers.demoNoFail,
-                modifiers.demoNoObstacles,
                 modifiers.energyType,
                 modifiers.noFailOn0Energy,
                 modifiers.instaFail,
