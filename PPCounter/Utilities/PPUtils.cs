@@ -133,7 +133,7 @@ namespace PPCounter.Utilities
         private float PPPercentage(float accuracy, bool oldCurve)
         {
             var max = oldCurve ? 1.14f : 1f;
-            var maxReward = oldCurve ? 1.25f : 1.5f;
+            var maxReward = oldCurve ? 1.25f : 7f;
 
             if (accuracy >= max)
                 return maxReward;
