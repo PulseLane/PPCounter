@@ -3,9 +3,9 @@
   "id": "PPCounter",
   "name": "PPCounter",
   "author": "PulseLane",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Adds a counter showing how much pp your current accuracy is worth on a ranked map",
-  "gameVersion": "1.12.0",
+  "gameVersion": "1.22.1",
   "dependsOn": {
     "Counters+": "^2.2.7",
     "BeatSaberMarkupLanguage": "^1.6.3",
