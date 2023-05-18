@@ -21,7 +21,7 @@ namespace PPCounter.Calculators
         public void SetCurve(ScoreSaber scoreSaber, SongID songID, GameplayModifiersModelSO gameplayModifiersModelSO, GameplayModifiers gameplayModifiers)
         {
             bool allowedPositiveModifiers = AllowedPositiveModifiers(songID);
-            GameplayModifiers updatedModifiers = allowedPositiveModifiers ? gameplayModifiers : GameplayModifierUtils.RemovePositiveModifiers(gameplayModifiers);
+            GameplayModifiers updatedModifiers = allowedPositiveModifiers ? GameplayModifierUtils.RemoveSuperFast(gameplayModifiers) : GameplayModifierUtils.RemovePositiveModifiers(gameplayModifiers);
 
             _multiplier = CalculateMultiplier(gameplayModifiersModelSO, updatedModifiers, scoreSaber.modifiers);
 

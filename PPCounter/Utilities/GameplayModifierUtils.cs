@@ -1,4 +1,6 @@
-﻿namespace PPCounter.Utilities
+﻿using System;
+
+namespace PPCounter.Utilities
 {
     public static class GameplayModifierUtils
     {
@@ -22,6 +24,28 @@
                 ? GameplayModifiers.SongSpeed.Normal : modifiers.songSpeed,
                 modifiers.noArrows,
                 false, // GN
+                modifiers.proMode,
+                modifiers.zenMode,
+                modifiers.smallCubes
+           );
+        }
+
+        public static GameplayModifiers RemoveSuperFast(GameplayModifiers modifiers)
+        {
+            return new GameplayModifiers(
+                modifiers.energyType,
+                modifiers.noFailOn0Energy,
+                modifiers.instaFail,
+                modifiers.failOnSaberClash,
+                modifiers.enabledObstacleType,
+                modifiers.noBombs,
+                modifiers.fastNotes,
+                modifiers.strictAngles,
+                modifiers.disappearingArrows,
+                modifiers.songSpeed.Equals(GameplayModifiers.SongSpeed.SuperFast)
+                ? GameplayModifiers.SongSpeed.Normal : modifiers.songSpeed,
+                modifiers.noArrows,
+                modifiers.ghostNotes,
                 modifiers.proMode,
                 modifiers.zenMode,
                 modifiers.smallCubes
