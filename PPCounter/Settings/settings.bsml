@@ -1,6 +1,26 @@
 ﻿<vertical spacing="1" horizontal-fit="PreferredSize">
-  <increment-setting text="Decimal Precision" value="decimalPrecision" integer-only="true" min="0" max="2" increment="1" apply-on-change="true"></increment-setting>
-  <checkbox-setting text="Relative Gain" value="relativeGain" hover-hint="Show how much pp gain/loss your current score would be relative to your PB" apply-on-change="true"></checkbox-setting>
-  <checkbox-setting text="Relative Gain Inline" value="relativeGainInline" hover-hint="Show the relative gain on the same line as the pp. If disabled, will show on a new line instead." apply-on-change="true"></checkbox-setting>
-  <checkbox-setting text="Relative Gain Color" value="relativeGainColor" hover-hint="Add color to the relative pp gain to highlight when you are above/below your PB" apply-on-change="true"></checkbox-setting>
+  <increment-setting text="Decimal Precision" value="decimalPrecision" integer-only="true" min="0" max="2" increment="1" apply-on-change="true"/>
+  <checkbox-setting text="Show Icons" value="showIcons" hover-hint="Show the logo for the respective services next to the pp values." apply-on-change="true"/>
+  <checkbox-setting text="ScoreSaber" value="scoreSaberEnabled" hover-hint="Show ScoreSaber PP." apply-on-change="true"/>
+  <checkbox-setting text="BeatLeader" value="beatLeaderEnabled" hover-hint="Show BeatLeader PP." apply-on-change="true"/>
+  <checkbox-setting text="AccSaber" value="accSaberEnabled" hover-hint="Show AccSaber AP." apply-on-change="true"/>
+  <horizontal spacing="2">
+	<text text="Edit counter order"/>
+	<clickable-image src="#EditIcon" hover-hint="Edit preferred order of pp counters" on-click="EditPreferredOrder"  size-delta-y="2.5" preserve-aspect="true"/>
+  </horizontal>
+  <modal clickerino-offerino-closerino='true' move-to-center ='true' id='counter-list-modal' show-event='open-preferred-order' hide-event='close-preferred-order' size-delta-x='80' size-delta-y='60'>
+  <horizontal child-control-width='true'>
+	<vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pad='8' pref-width='50' pref-height='60'>
+		<list id='counterList' list-style='Simple' select-cell='SelectCounter' clickable-cells='true'/>
+	</vertical>
+	<vertical spacing='30'>
+		<page-button on-click='IncreaseOrder' direction='Up' pref-width='10' id='up-button' hover-hint='Move up counter' />
+		<page-button on-click='DecreaseOrder' direction='Down' pref-width='10' id='down-button' hover-hint='Move down counter'/>
+	</vertical>
+  </horizontal>
+  </modal>
+  <increment-setting text="Max Counters" value="maxCounters" integer-only="true" hover-hint="The maximum amount of counters that will show on a map" min="1" max="5" increment="1"  apply-on-change="true"/>
+  <checkbox-setting text="Relative Gain" value="relativeGain" hover-hint="Show how much pp gain/loss your current score would be relative to your PB" apply-on-change="true" active="false"/>
+  <checkbox-setting text="Relative Gain Inline" value="relativeGainInline" hover-hint="Show the relative gain on the same line as the pp. If disabled, will show on a new line instead." apply-on-change="true" active="false"/>
+  <checkbox-setting text="Relative Gain Color" value="relativeGainColor" hover-hint="Add color to the relative pp gain to highlight when you are above/below your PB" apply-on-change="true" active="false"/>
 </vertical>

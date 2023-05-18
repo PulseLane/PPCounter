@@ -7,8 +7,12 @@ namespace PPCounter.Installers
     {
         public override void InstallBindings()
         {
-            Logger.log.Debug($"Binding {nameof(PPData)}");
+            Container.Bind<PPDownloader>().FromNewComponentOnNewGameObject().AsSingle();
+
             Container.BindInterfacesAndSelfTo<PPData>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<SSData>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<BeatLeaderData>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<AccSaberData>().AsSingle().NonLazy();
         }
     }
 }

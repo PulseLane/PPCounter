@@ -12,21 +12,52 @@ namespace PPCounter.Data
     class PPDownloader : MonoBehaviour
     {
         private const string URI_PREFIX = "https://cdn.pulselane.dev/";
-        private const string FILE_NAME = "raw_pp.json";
-        public Action<Dictionary<string, RawPPData>> OnDataDownloaded;
+        private const string ACCSABER_URL = "https://api.accsaber.com/";
+        private const string PP_FILE_NAME = "raw_pp.json";
+        private const string CURVE_FILE_NAME = "curves.json";
+        private const string ACCSABER_RANKED_MAPS = "ranked-maps";
+        public Action<Dictionary<string, RawPPData>> OnSSDataDownloaded;
+        public Action<List<AccSaberRankedMap>> OnAccSaberDataDownloaded;
+        public Action<Leaderboards> OnCurvesDownloaded;
         public Action OnError;
 
-        public void StartDownloading()
+        public void StartDownloadingCurves()
         {
-            StartCoroutine(GetRawPP());
+            GetCurves();
         }
 
-        IEnumerator GetRawPP()
+        public void StartDownloadingSS()
         {
-            string uri = URI_PREFIX + FILE_NAME;
+            GetRawSSPP();
+        }
+
+        public void StartDownloadingAccSaber()
+        {
+            GetAccSaberRankedMaps();
+        }
+
+        void GetRawSSPP()
+        {
+            string uri = URI_PREFIX + PP_FILE_NAME;
+            StartCoroutine(MakeWebRequest(uri, OnSSDataDownloaded));
+        }
+
+        void GetAccSaberRankedMaps()
+        {
+            string uri = ACCSABER_URL + ACCSABER_RANKED_MAPS;
+            StartCoroutine(MakeWebRequest(uri, OnAccSaberDataDownloaded));
+        }
+
+        void GetCurves()
+        {
+            string uri = URI_PREFIX + CURVE_FILE_NAME;
+            StartCoroutine(MakeWebRequest(uri, OnCurvesDownloaded));
+        }
+
+        IEnumerator MakeWebRequest<T>(string uri, Action<T> OnDownloadComplete)
+        {
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
-                // Request and wait for the desired page.
                 Logger.log.Debug("Downloading pp data...");
                 yield return webRequest.SendWebRequest();
                 if (webRequest.isNetworkError)
@@ -39,8 +70,9 @@ namespace PPCounter.Data
                 {
                     try
                     {
-                        var json = JsonConvert.DeserializeObject<Dictionary<string, RawPPData>>(webRequest.downloadHandler.text);
-                        OnDataDownloaded?.Invoke(json);
+                        var json = JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text);
+
+                        OnDownloadComplete?.Invoke(json);
                     }
 
                     catch (Exception e)
