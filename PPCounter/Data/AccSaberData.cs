@@ -1,14 +1,17 @@
-﻿using PPCounter.Utilities;
+﻿using PPCounter.Settings;
+using PPCounter.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine.Profiling.Memory.Experimental;
 using Zenject;
 using static PPCounter.Utilities.Structs;
 
 namespace PPCounter.Data
 {
-    internal class AccSaberData : IInitializable
+    internal class AccSaberData : IInitializable, IDisposable
     {
+        private bool _dataInitStart = false;
         public bool DataInit { get; private set; } = false;
         [Inject] private PPDownloader _ppDownloader;
         private Dictionary<Structs.SongID, float> _rankedMaps = new Dictionary<Structs.SongID, float>();
@@ -17,10 +20,25 @@ namespace PPCounter.Data
 
         public void Initialize()
         {
-            //LoadAccSaberFile();
-            _ppDownloader.OnAccSaberDataDownloaded += OnDataDownloaded;
+            PluginSettings.OnAccSaberEnabled += GetData;
+            if (PluginSettings.Instance.accSaberEnabled)
+            {
+                GetData();   
+            }
+        }
 
-            _ppDownloader.StartDownloadingAccSaber();
+        private void GetData()
+        {
+            if (!_dataInitStart)
+            {
+                PluginSettings.OnAccSaberEnabled -= GetData;
+                _dataInitStart = true;
+
+                //LoadAccSaberFile();
+                _ppDownloader.OnAccSaberDataDownloaded += OnDataDownloaded;
+
+                _ppDownloader.StartDownloadingAccSaber();
+            }
         }
 
         public void OnDataDownloaded(List<AccSaberRankedMap> rankedMaps)
@@ -94,6 +112,11 @@ namespace PPCounter.Data
                 SongID songID = new SongID(id, beatmapDifficulty);
                 _rankedMaps[songID] = rankedMap.complexity;
             }
+        }
+
+        public void Dispose()
+        {
+            PluginSettings.OnAccSaberEnabled -= GetData;
         }
     }
 }

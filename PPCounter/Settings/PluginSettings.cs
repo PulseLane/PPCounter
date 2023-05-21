@@ -7,11 +7,25 @@ namespace PPCounter.Settings
 {
     internal class PluginSettings
     {
+        public static Action OnAccSaberEnabled;
+
         public static PluginSettings Instance { get; set; }
         public virtual bool showIcons { get; set; } = false;
         public virtual bool scoreSaberEnabled { get; set; } = true;
         public virtual bool beatLeaderEnabled { get; set; } = false;
-        public virtual bool accSaberEnabled { get; set; } = false;
+        private bool _accSaberEnabled = false;
+        public virtual bool accSaberEnabled
+        {
+            get => _accSaberEnabled;
+            set
+            {
+                _accSaberEnabled = value;
+                if (value)
+                {
+                    OnAccSaberEnabled?.Invoke();
+                }
+            }
+        }
 
         // Default Enum ordering
         public virtual long preferredOrder { get; set; } = 123;
