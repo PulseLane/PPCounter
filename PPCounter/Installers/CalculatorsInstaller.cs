@@ -8,8 +8,12 @@ namespace PPCounter.Installers
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<ScoreSaberCalculator>().AsSingle();
-            Container.BindInterfacesAndSelfTo<BeatLeaderCalculator>().AsSingle();
             Container.BindInterfacesAndSelfTo<AccSaberCalculator>().AsSingle();
+
+            if (Plugin.BeatLeaderInstalled)
+            {
+                Container.BindInterfacesAndSelfTo<BeatLeaderCalculator>().AsSingle();
+            }
         }
     }
 }

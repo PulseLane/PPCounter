@@ -1,11 +1,13 @@
 ﻿using IPA;
 using IPA.Config;
 using IPA.Config.Stores;
+using IPA.Loader;
 using PPCounter.Settings;
 using PPCounter.Utilities;
 using SiraUtil.Zenject;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using IPALogger = IPA.Logging.Logger;
 
 namespace PPCounter
@@ -15,6 +17,8 @@ namespace PPCounter
     {
         internal static Plugin instance { get; private set; }
         internal static string Name => "PP Counter";
+
+        internal static bool BeatLeaderInstalled = false;
 
         //private readonly Harmony _harmony;
         //private const string _harmonyID = "dev.PulseLane.BeatSaber.PPCounter";
@@ -29,7 +33,6 @@ namespace PPCounter
             zenject.Install<Installers.PPCounterInstaller>(Location.StandardPlayer, Location.MultiPlayer);
             PluginSettings.Instance = config.Generated<PluginSettings>();
 
-
             RenewSettings();
             //_harmony = new Harmony(_harmonyID);
 
@@ -37,6 +40,13 @@ namespace PPCounter
             //{
             //    PatchBeatLeader();
             //}
+        }
+
+        [OnEnable]
+        public void OnEnable()
+        {
+            BeatLeaderInstalled = IsBeatLeaderInstalled();
+            Logger.log.Debug($"Beatleader installed: {BeatLeaderInstalled}");
         }
 
         private void RenewSettings()
@@ -68,18 +78,18 @@ namespace PPCounter
         //    _harmony.Patch(originalNotifyCacheWasChanged, harmonyNotifyCacheWasChanged);
         //}
 
-        //private bool IsBeatLeaderInstalled()
-        //{
-        //    try
-        //    {
-        //        var metadatas = PluginManager.EnabledPlugins.Where(x => x.Id == "BeatLeader");
-        //        return metadatas.Count() > 0;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Logger.log.Debug($"Error checking for BeatLeader install: {e.Message}");
-        //        return false;
-        //    }
-        //}
+        private bool IsBeatLeaderInstalled()
+        {
+            try
+            {
+                var metadatas = PluginManager.EnabledPlugins.Where(x => x.Id == "BeatLeader");
+                return metadatas.Count() > 0;
+            }
+            catch (Exception e)
+            {
+                Logger.log.Debug($"Error checking for BeatLeader install: {e.Message}");
+                return false;
+            }
+        }
     }
 }
